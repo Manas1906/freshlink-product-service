@@ -15,6 +15,12 @@ public class Product {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Enumerated(EnumType.STRING)
+    private ProductStatus status;
+
+    private String createdBy;
+    private String createdRole;
+
     private String name;
     private String description;
     private BigDecimal price;
