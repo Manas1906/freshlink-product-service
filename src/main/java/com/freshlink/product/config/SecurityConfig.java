@@ -7,11 +7,13 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
@@ -25,6 +27,10 @@ public class SecurityConfig {
 
                         // Admin-only endpoints (future use)
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
+
+                        // Reduce stock (called internally by checkout-service)
+                        .requestMatchers(HttpMethod.POST, "/api/products/reduce-stock/**")
+                        .permitAll()
 
                         // Create / Update products
                         .requestMatchers(HttpMethod.POST, "/api/products/**")

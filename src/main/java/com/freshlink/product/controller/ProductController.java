@@ -19,8 +19,20 @@ public class ProductController {
 
     @PostMapping
     public Product create(@RequestBody Product p, Authentication auth) {
-        String role = auth.getAuthorities().iterator().next().getAuthority().replace("ROLE_", "");
-        return service.create(p, auth.getName(), role);
+        String role = "USER";
+        String email = "anonymous";
+        if (auth != null) {
+            email = auth.getName();
+            if (auth.getAuthorities() != null && !auth.getAuthorities().isEmpty()) {
+                role = auth.getAuthorities().iterator().next().getAuthority().replace("ROLE_", "");
+            }
+        }
+        return service.create(p, email, role);
+    }
+
+    @PostMapping("/reduce-stock/{checkoutId}")
+    public void reduceStock(@PathVariable Long checkoutId) {
+        service.reduceStock(checkoutId);
     }
 
     @PutMapping("/approve/{id}")
